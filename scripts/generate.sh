@@ -2,6 +2,14 @@
 
 echo "FROM buildpack-deps:$(awk -F'_' '{print tolower($2)}' <<< $LINUX_VERSION)"
 
+# CircleCI setup
+echo "RUN echo 'APT::Get::Assume-Yes \"true\";' > /etc/apt/apt.conf.d/90circleci && \
+echo 'DPkg::Options \"--force-confnew\";' >> /etc/apt/apt.conf.d/90circleci"
+
+echo "ENV DEBIAN_FRONTEND=noninteractive"
+
+ENV DEBIAN_FRONTEND=noninteractive
+
 echo "RUN apt-get update"
 
 if [ ! -e "$PACKAGES" ] ; then
@@ -136,3 +144,11 @@ RUN apt-get -y install libgconf-2-4 \
   && mv chromedriver /usr/local/bin/chromedriver \
   && chmod +x /usr/local/bin/chromedriver"
 fi
+
+echo "# set up circleci user
+RUN groupadd --gid 3434 circleci \
+  && useradd --uid 3434 --gid circleci --shell /bin/bash --create-home circleci \
+  && echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci \
+  && echo 'Defaults    env_keep += \"DEBIAN_FRONTEND\"' >> /etc/sudoers.d/env_keep"
+
+echo "USER circleci"
