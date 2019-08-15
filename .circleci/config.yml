@@ -13,7 +13,7 @@ image_config: &image_config
   # make sure you also add the values of your IMAGE_NAME & IMAGE_TAG variables
   # to the `test_image` job (line 55)
 
-  LINUX_VERSION: bionic
+  LINUX_VERSION: UBUNTU_BIONIC
 
   RUBY_VERSION_NUM: 2.5.1
 
@@ -43,9 +43,7 @@ jobs:
     steps:
       - checkout
 
-      - run: |
-          bash scripts/generate.sh > Dockerfile
-          cat Dockerfile
+      - run: bash scripts/generate.sh > Dockerfile
 
       - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
