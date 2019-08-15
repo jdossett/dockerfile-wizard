@@ -18,22 +18,22 @@ read -r -p "
 Pick a Linux version for your image:
   1. Debian 8 (Jessie)
   2. Debian 9 (Stretch)
-  3. Ubuntu 14.04 (Trusty)
-  4. Ubuntu 16.04 (Xenial)
+  3. Ubuntu 16.04 (Xenial)
+  4. Ubuntu 18.04 (BIONIC)
 (Enter 1, 2, 3, or 4): " LINUX_VERSION
 
 case "$LINUX_VERSION" in
   1)
-    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_TRUSTY, or UBUNTU_XENIAL/DEBIAN_JESSIE/' .circleci/config.yml
+    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_XENIAL, or UBUNTU_BIONIC/DEBIAN_JESSIE/' .circleci/config.yml
     ;;
   2)
-    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_TRUSTY, or UBUNTU_XENIAL/DEBIAN_STRETCH/' .circleci/config.yml
+    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_XENIAL, or UBUNTU_BIONIC/DEBIAN_STRETCH/' .circleci/config.yml
     ;;
   3)
-    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_TRUSTY, or UBUNTU_XENIAL/UBUNTU_TRUSTY/' .circleci/config.yml
+    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_XENIAL, or UBUNTU_BIONIC/UBUNTU_XENIAL/' .circleci/config.yml
     ;;
   4)
-    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_TRUSTY, or UBUNTU_XENIAL/UBUNTU_XENIAL/' .circleci/config.yml
+    perl -i -pe 's/# DEBIAN_JESSIE, DEBIAN_STRETCH, UBUNTU_XENIAL, or UBUNTU_BIONIC/UBUNTU_BIONIC/' .circleci/config.yml
     ;;
 esac
 
@@ -146,6 +146,16 @@ case "$BROWSERS" in
     perl -i -pe "s/- run: chromedriver/# - run: chromedriver/" .circleci/config.yml
     ;;
 esac
+
+read -r -p "
+Provide any other non standard parackages you would like to install
+: " PACKAGES
+
+if [ "$PACKAGES" ] ; then
+   perl -i -pe "s/# other packages to install/$PACKAGES/" .circleci/config.yml
+else
+  perl -i -pe "s/PACKAGES:/# PACKAGES:/" .circleci/config.yml
+fi
 
 echo "
 Your config.yml is done! Push your changes to GitHub to start building your docker image on CircleCI

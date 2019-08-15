@@ -4,6 +4,10 @@ echo "FROM buildpack-deps:$(awk -F'_' '{print tolower($2)}' <<< $LINUX_VERSION)"
 
 echo "RUN apt-get update"
 
+if [ ! -e "$PACKAGES" ] ; then
+  echo "RUN apt-get install -y $PACKAGES"
+fi
+
 if [ ! -e $RUBY_VERSION_NUM ] ; then
     echo "RUN apt-get install -y libssl-dev && wget http://ftp.ruby-lang.org/pub/ruby/$(awk -F'.' '{ print $1"."$2 }' <<< $RUBY_VERSION_NUM)/ruby-$RUBY_VERSION_NUM.tar.gz && \
     tar -xzvf ruby-$RUBY_VERSION_NUM.tar.gz && \
@@ -45,9 +49,9 @@ RUN if [ \$(grep 'VERSION_ID="8"' /etc/os-release) ] ; then \\
     echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list && \\
     apt-get update && apt-get -y install -t jessie-backports openjdk-8-jdk ca-certificates-java \\
 ; elif [ \$(grep 'VERSION_ID="9"' /etc/os-release) ] ; then \\
-		apt-get update && apt-get -y -q --no-install-recommends install -t stable openjdk-8-jdk ca-certificates-java \\
+    apt-get update && apt-get -y -q --no-install-recommends install -t stable openjdk-8-jdk ca-certificates-java \\
 ; elif [ \$(grep 'VERSION_ID="14.04"' /etc/os-release) ] ; then \\
-		apt-get update && \\
+    apt-get update && \\
     apt-get --force-yes -y install software-properties-common python-software-properties && \\
     echo | add-apt-repository -y ppa:webupd8team/java && \\
     apt-get update && \\
@@ -104,7 +108,7 @@ RUN if [ \$(grep 'VERSION_ID="8"' /etc/os-release) ] ; then \\
     echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list && \\
     apt-get update && apt-get -y install -t jessie-backports xvfb phantomjs \\
 ; else \\
-		apt-get update && apt-get -y install xvfb phantomjs \\
+    apt-get update && apt-get -y install xvfb phantomjs \\
 ; fi
 EOF
 echo "ENV DISPLAY :99"
