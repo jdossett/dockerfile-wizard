@@ -8,9 +8,17 @@ echo 'DPkg::Options \"--force-confnew\";' >> /etc/apt/apt.conf.d/90circleci"
 
 echo "ENV DEBIAN_FRONTEND=noninteractive"
 
-ENV DEBIAN_FRONTEND=noninteractive
+echo "RUN ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime"
 
-echo "RUN apt-get update"
+echo "# Use unicode"
+echo "RUN locale-gen C.UTF-8 || true"
+echo "ENV LANG=C.UTF-8"
+
+echo "RUN apt-get update \
+apt-get install -y \
+git mercurial xvfb \
+locales sudo openssh-client ca-certificates tar gzip parallel \
+net-tools netcat unzip zip bzip2 gnupg curl wget"
 
 if [ ! -e "$PACKAGES" ] ; then
   echo "RUN apt-get install -y $PACKAGES"
@@ -152,3 +160,5 @@ RUN groupadd --gid 3434 circleci \
   && echo 'Defaults    env_keep += \"DEBIAN_FRONTEND\"' >> /etc/sudoers.d/env_keep"
 
 echo "USER circleci"
+
+echo 'CMD ["/bin/sh"]'
