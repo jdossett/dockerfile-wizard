@@ -19,7 +19,7 @@ Pick a Linux version for your image:
   1. Debian 8 (Jessie)
   2. Debian 9 (Stretch)
   3. Ubuntu 16.04 (Xenial)
-  4. Ubuntu 18.04 (BIONIC)
+  4. Ubuntu 18.04 (Bionic)
 (Enter 1, 2, 3, or 4): " LINUX_VERSION
 
 case "$LINUX_VERSION" in
