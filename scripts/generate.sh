@@ -14,7 +14,7 @@ echo "# Use unicode"
 echo "RUN locale-gen C.UTF-8 || true"
 echo "ENV LANG=C.UTF-8"
 
-echo "RUN apt-get update \
+echo "RUN apt-get update && \
 apt-get install -y \
 git mercurial xvfb \
 locales sudo openssh-client ca-certificates tar gzip parallel \
